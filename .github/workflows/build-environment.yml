@@ -1,0 +1,30 @@
+name: Build learner environment
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    # Configure a creator-controlled Linux x86_64 runner with Nix and Node 24.
+    # Restrict this runner to this trusted repository; never enable pull_request jobs.
+    runs-on: [self-hosted, linux, x64, creator-environment]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate, build, publish and bind immutable environment
+        run: node --experimental-strip-types environment/publish.ts
+        env:
+          PLATFORM_URL: ${{ vars.PLATFORM_URL }}
+          PLATFORM_RESOURCE_IDS: ${{ vars.PLATFORM_RESOURCE_IDS }}
+          CACHE_PUBLIC_URL: ${{ vars.CACHE_PUBLIC_URL }}
+          CACHE_UPLOAD_URL: ${{ vars.CACHE_UPLOAD_URL }}
+          NIX_PUBLIC_KEY: ${{ vars.NIX_PUBLIC_KEY }}
+          NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
+          CACHE_UPLOAD_TOKEN: ${{ secrets.CACHE_UPLOAD_TOKEN }}

@@ -1,0 +1,12 @@
+{
+  "id": "group-changing-policies",
+  "title": "Changing Policies",
+  "children": ["Introduction.md", "Identify_variable_policies", "Connect_policy_to_checkout"],
+  "lessons": {
+    "Introduction.md": {
+      "id": "lesson-course-lld-intro",
+      "title": "Changing Policies",
+      "required": true
+    }
+  }
+}
